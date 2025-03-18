@@ -1,0 +1,29 @@
+# tests/test_quarterly_trigger.py
+
+def test_eventbridge_trigger():
+    import boto3
+    import datetime
+    
+    client = boto3.client('events')
+    
+    # Simulate the event
+    test_event = {
+        'time': datetime.datetime.now().isoformat(),
+        'detail-type': 'Scheduled Event',
+        'source': 'aws.events',
+        'account': '123456789012',
+        'region': 'us-west-2',
+        'detail': {}
+    }
+    
+    response = client.put_events(
+        Entries=[
+            {
+                'Source': 'test.saas.review',
+                'DetailType': 'Quarterly Review Test',
+                'Detail': json.dumps(test_event)
+            }
+        ]
+    )
+    
+    assert response['FailedEntryCount'] == 0
