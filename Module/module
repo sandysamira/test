@@ -1,0 +1,22 @@
+# main.tf
+
+provider "aws" {
+  region = var.aws_region
+}
+
+module "quarterly_trigger" {
+  source = "./modules/eventbridge"
+
+  project_prefix          = var.project_prefix
+  state_machine_arn      = var.state_machine_arn
+  notification_recipients = var.notification_recipients
+  departments_to_review   = var.departments_to_review
+  cost_threshold         = var.cost_threshold
+  sns_topic_arn          = var.sns_topic_arn
+  
+  common_tags = {
+    Environment = var.environment
+    Project     = "SaaS-Review-Automation"
+    ManagedBy   = "Terraform"
+  }
+}
